@@ -1,13 +1,16 @@
 module Core
-
+  # It's a subset of a Expense
   class Share < Struct.new(:user, :to_pay, :paid)
   end
 
+  # Expense is something we want to share among us
   class Expense < Struct.new(:description, :amount)
   end
 
+  # The engine responsible for control the Shares of an Expense
   class Split
     attr_reader :expense, :shares
+
     def initialize(expense, users)
       @expense = expense
       @users = users
@@ -21,7 +24,7 @@ module Core
     end
 
     def build_share_for
-      -> (user) { Share.new(user, suggested_amount, 0) }
+      ->(user) { Share.new(user, suggested_amount, 0) }
     end
 
     def split_also_with(*users)
@@ -82,11 +85,12 @@ module Core
   end
 
   module_function
-    def expense description: , amount: 0
-      Expense.new(description, amount)
-    end
 
-    def split expense, users
-      Split.new(expense, users)
-    end
+  def expense(description:, amount: 0)
+    Expense.new(description, amount)
+  end
+
+  def split(expense, users)
+    Split.new(expense, users)
+  end
 end

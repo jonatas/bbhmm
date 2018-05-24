@@ -3,7 +3,7 @@ require 'core'
 
 RSpec.describe Core do
   describe "expense" do
-    let(:pizza_night) do
+    let(:pizza) do
       Core.expense description: 'pizza night', amount: 100
     end
 
@@ -12,7 +12,7 @@ RSpec.describe Core do
     let(:boi) { "boi" }
 
     let(:pizza_split) do
-      Core.split(pizza_night, [henrisch, jonatas])
+      Core.split(pizza, [henrisch, jonatas])
     end
 
     context 'split a pizza' do
