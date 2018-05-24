@@ -11,6 +11,8 @@ module Core
     def initialize(expense, users)
       @expense = expense
       @users = users
+      @overrides = {}
+
       @shares = initialize_shares
     end
 
@@ -30,20 +32,26 @@ module Core
 
     def update_all_suggested_amounts
       @shares.each do |share|
+        next if @overrides[share.user]
         share.to_pay = suggested_amount
       end
     end
 
     def suggested_amount
-      (expense.amount.to_f / @users.size).round(2)
+      (
+        (expense.amount.to_f - total_overrided) /
+        (@users.size - @overrides.size)
+      ).round(2)
     end
 
     def add_payment(user, value)
       share_for(user).paid += value
     end
 
-    def consider(user, pay_value: )
+    def consider(user, pay_value:)
+      @overrides[user] = pay_value
       share_for(user).to_pay = pay_value
+      update_all_suggested_amounts
     end
 
     def missing_value
@@ -62,12 +70,14 @@ module Core
       paid >= expense.amount
     end
 
-    def inconsistent?
-      sum(:to_pay) < expense.amount
+    def share_for(user)
+      @shares.find { |s| s.user == user }
     end
 
-    def share_for(user)
-      @shares.find{|s|s.user == user}
+    def total_overrided
+      return 0 if @overrides.empty?
+
+      @overrides.values.inject(:+)
     end
   end
 

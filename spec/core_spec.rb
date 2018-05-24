@@ -84,18 +84,17 @@ RSpec.describe Core do
         pizza_split.consider(boi, pay_value: 20)
       end
 
-      it 'make the split inconsistent' do
-        expect(pizza_split).to be_inconsistent
+      it 'balances the amount to pay of the other users' do
+        expect(pizza_split.shares.map(&:to_pay)).to match_array([20, 40, 40])
       end
 
       context 'when align the split' do
         before do
-          pizza_split.consider(jonatas, pay_value: 40)
-          pizza_split.consider(henrisch, pay_value: 40)
+          pizza_split.consider(jonatas, pay_value: 50)
         end
 
         it 'make the split consistent' do
-          expect(pizza_split).not_to be_inconsistent
+          expect(pizza_split.share_for(henrisch).to_pay).to eq(30)
         end
       end
     end
