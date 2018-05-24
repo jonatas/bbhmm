@@ -82,6 +82,13 @@ module Core
 
       @overrides.values.inject(:+)
     end
+
+    def exclude(user)
+      @overrides.delete(user)
+      @users.delete(user)
+      @shares.delete(share_for(user))
+      update_all_suggested_amounts
+    end
   end
 
   module_function

@@ -98,5 +98,17 @@ RSpec.describe Core do
         end
       end
     end
+
+    describe 'consider remove a user from a split' do
+      before do
+        pizza_split.split_also_with(boi)
+        pizza_split.consider(henrisch, pay_value: 30)
+        pizza_split.exclude(jonatas)
+      end
+
+      it 'balances the amount to pay of the all users' do
+        expect(pizza_split.shares.map(&:to_pay)).to match_array([30, 70])
+      end
+    end
   end
 end
