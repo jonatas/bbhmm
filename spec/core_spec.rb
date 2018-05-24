@@ -2,14 +2,14 @@ require 'spec_helper'
 require 'core'
 
 RSpec.describe Core do
-  describe "expense" do
+  describe 'expense' do
     let(:pizza) do
       Core.expense description: 'pizza night', amount: 100
     end
 
-    let(:jonatas) { "jonatas" }
-    let(:henrisch) { "henrisch" }
-    let(:boi) { "boi" }
+    let(:jonatas) { 'jonatas' }
+    let(:henrisch) { 'henrisch' }
+    let(:boi) { 'boi' }
 
     let(:pizza_split) do
       Core.split(pizza, [henrisch, jonatas])
@@ -21,11 +21,11 @@ RSpec.describe Core do
       end
 
       it 'sets initial shares with value to pay' do
-        expect(pizza_split.shares.map(&:to_pay)).to eq([50,50])
+        expect(pizza_split.shares.map(&:to_pay)).to eq([50, 50])
       end
 
       it 'sets initial shares without any paid values' do
-        expect(pizza_split.shares.map(&:paid)).to eq([0,0])
+        expect(pizza_split.shares.map(&:paid)).to eq([0, 0])
       end
     end
 
@@ -74,7 +74,7 @@ RSpec.describe Core do
       end
 
       it do
-        expect(pizza_split.shares.map(&:to_pay)).to eq([33.33,33.33,33.33])
+        expect(pizza_split.shares.map(&:to_pay)).to eq([33.33, 33.33, 33.33])
       end
     end
 
