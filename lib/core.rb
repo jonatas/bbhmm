@@ -7,6 +7,9 @@ module Core
   class Expense < Struct.new(:description, :amount)
   end
 
+  class Debt < Struct.new(:from, :to, :amount)
+  end
+
   # The engine responsible for control the Shares of an Expense
   class Split
     attr_reader :expense, :shares
@@ -88,6 +91,32 @@ module Core
       @users.delete(user)
       @shares.delete(share_for(user))
       update_all_suggested_amounts
+    end
+
+    def resolutor
+      receivers = @shares.select { |e| e.paid > e.to_pay }
+      payers = @shares.select { |e| e.paid < e.to_pay }.map(&:dup)
+      debts = []
+
+      receivers.each do |share|
+        amount = share.paid - share.to_pay
+        while amount > 0 && payers.any?
+          payer = payers.first
+          missing_value = payer.to_pay - payer.paid
+          value =
+            if missing_value >= amount
+              payer.to_pay -= amount
+              amount
+            else
+              payers.shift
+              missing_value
+            end
+
+          debts << Debt.new(payer.user, share.user, value)
+          amount -= value
+        end
+      end
+      debts
     end
   end
 

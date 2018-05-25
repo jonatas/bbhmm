@@ -4,7 +4,7 @@ require 'core'
 RSpec.describe Core do
   describe 'expense' do
     let(:pizza) do
-      Core.expense description: 'pizza night', amount: 100
+      Core.expense(description: 'pizza night', amount: 100)
     end
 
     let(:jonatas) { 'jonatas' }
@@ -68,7 +68,7 @@ RSpec.describe Core do
       end
     end
 
-    describe 'adding more people to split the pizza' do
+    describe 'adding more user to split the pizza' do
       before do
         pizza_split.split_also_with(boi)
       end
@@ -108,6 +108,54 @@ RSpec.describe Core do
 
       it 'balances the amount to pay of the all users' do
         expect(pizza_split.shares.map(&:to_pay)).to match_array([30, 70])
+      end
+    end
+
+    context 'when split is completed' do
+      describe 'resolutor' do
+        before do
+          pizza_split.add_payment(henrisch, 100)
+          pizza_split.add_payment(jonatas, 0)
+        end
+
+        it 'reports who should pay who' do
+          expect(pizza_split.resolutor)
+            .to eq([Core::Debt.new(jonatas, henrisch, 50)])
+        end
+
+        context 'when another user is also splitting' do
+          before do
+            pizza_split.split_also_with(boi)
+            pizza_split.consider(boi, pay_value: 20)
+          end
+
+          it 'reports who should pay who' do
+            debts = [
+              Core::Debt.new(jonatas, henrisch, 40),
+              Core::Debt.new(boi, henrisch, 20)
+            ]
+            expect(pizza_split.resolutor).to eq(debts)
+          end
+
+          context 'when some user pay partially' do
+            let(:pizza) do
+              Core.expense(description: 'pizza night', amount: 130)
+            end
+
+            before do
+              pizza_split.add_payment(boi, 10)
+              pizza_split.add_payment(jonatas, 20)
+            end
+
+            it 'reports who should pay who' do
+              debts = [
+                Core::Debt.new(jonatas, henrisch, 35),
+                Core::Debt.new(boi, henrisch, 10)
+              ]
+              expect(pizza_split.resolutor).to eq(debts)
+            end
+          end
+        end
       end
     end
   end
