@@ -2,14 +2,14 @@ require 'spec_helper'
 require 'core'
 
 RSpec.describe Core do
+  let(:jonatas) { 'jonatas' }
+  let(:henrisch) { 'henrisch' }
+  let(:boi) { 'boi' }
+
   describe 'expense' do
     let(:pizza) do
       Core.expense(description: 'pizza night', amount: 100)
     end
-
-    let(:jonatas) { 'jonatas' }
-    let(:henrisch) { 'henrisch' }
-    let(:boi) { 'boi' }
 
     let(:pizza_split) do
       Core.split(pizza, [henrisch, jonatas])
@@ -156,6 +156,31 @@ RSpec.describe Core do
             end
           end
         end
+      end
+    end
+  end
+
+  describe 'simplify' do
+    context 'when 2 debts from the same user to the same user' do
+      it 'simplify the debts' do
+        debts = [
+          Core::Debt.new(henrisch, jonatas, 30),
+          Core::Debt.new(henrisch, jonatas, 50),
+        ]
+
+        simplified_debts = [Core::Debt.new(henrisch, jonatas, 80)]
+        expect(Core.simplify(debts)).to match_array(simplified_debts)
+      end
+    end
+    context 'when 2 users owe eachother' do
+      it 'simplify the debts' do
+        debts = [
+          Core::Debt.new(henrisch, jonatas, 30),
+          Core::Debt.new(jonatas, henrisch, 50),
+        ]
+
+        simplified_debts = [Core::Debt.new(jonatas, henrisch, 20)]
+        expect(Core.simplify(debts)).to match_array(simplified_debts)
       end
     end
   end
