@@ -183,5 +183,23 @@ RSpec.describe Core do
         expect(Core.simplify(debts)).to match_array(simplified_debts)
       end
     end
+
+    context 'with a more complex scenario' do
+      it 'simplify the debts' do
+        debts = [
+          Core::Debt.new(boi, henrisch, 150),
+          Core::Debt.new(jonatas, henrisch, 50),
+          Core::Debt.new(jonatas, boi, 30),
+          Core::Debt.new(boi, jonatas, 30),
+          Core::Debt.new(henrisch, boi, 30),
+        ]
+
+        simplified_debts = [
+          Core::Debt.new(boi, henrisch, 120),
+          Core::Debt.new(jonatas, henrisch, 50),
+        ]
+        expect(Core.simplify(debts)).to match_array(simplified_debts)
+      end
+    end
   end
 end
