@@ -100,4 +100,14 @@ RSpec.describe Core do
       end
     end
   end
+
+  describe "house aggregated expenses" do
+    let(:house_rental) do
+      Core.expense description: 'house monthly fee', amount: 4500
+    end
+    let(:rent_split) do
+      Core.split(house_rental, %w[henrisch, carioca, johan, jonatas, parah])
+    end
+
+  end
 end

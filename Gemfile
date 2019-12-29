@@ -67,3 +67,5 @@ gem "guard-rspec", "~> 4.7"
 
 # Added at 2018-05-21 18:43:11 -0300 by jonatasdp:
 gem "guard-livereload", "~> 2.5"
+
+gem "telegram-bot-ruby"

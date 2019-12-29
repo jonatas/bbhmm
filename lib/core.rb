@@ -11,11 +11,7 @@ module Core
     def initialize(expense, users)
       @expense = expense
       @users = users
-      @shares = initialize_shares
-    end
-
-    def initialize_shares
-      @users.map(&build_share_for)
+      @shares ||= @users.map(&build_share_for)
     end
 
     def build_share_for
@@ -23,18 +19,21 @@ module Core
     end
 
     def split_also_with(*users)
-      @users += users
+      missing = users - @users
+      return if missing.empty?
+      @users += missing
       update_all_suggested_amounts
-      @shares += users.map(&build_share_for)
+      @shares += missing.map(&build_share_for)
     end
 
     def update_all_suggested_amounts
-      @shares.each do |share|
+      shares.each do |share|
         share.to_pay = suggested_amount
       end
     end
 
     def suggested_amount
+      return 0 if @users.empty?
       (expense.amount.to_f / @users.size).round(2)
     end
 
@@ -55,7 +54,7 @@ module Core
     end
 
     def sum(attribute)
-      @shares.map(&attribute).inject(:+)
+      shares.map(&attribute).inject(:+) || 0
     end
 
     def completed?
@@ -67,7 +66,7 @@ module Core
     end
 
     def share_for(user)
-      @shares.find{|s|s.user == user}
+      shares.find{|s|s.user == user}
     end
   end
 
