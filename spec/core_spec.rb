@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'core'
 
 RSpec.describe Core do
-  describe "expense" do
+  describe 'expense' do
     let(:pizza_night) do
       Core.expense description: 'pizza night', amount: 100
     end
 
-    let(:jonatas) { "jonatas" }
-    let(:henrisch) { "henrisch" }
-    let(:boi) { "boi" }
+    let(:jonatas) { 'jonatas' }
+    let(:henrisch) { 'henrisch' }
+    let(:boi) { 'boi' }
 
     let(:pizza_split) do
       Core.split(pizza_night, [henrisch, jonatas])
@@ -21,11 +23,11 @@ RSpec.describe Core do
       end
 
       it 'sets initial shares with value to pay' do
-        expect(pizza_split.shares.map(&:to_pay)).to eq([50,50])
+        expect(pizza_split.shares.map(&:to_pay)).to eq([50, 50])
       end
 
       it 'sets initial shares without any paid values' do
-        expect(pizza_split.shares.map(&:paid)).to eq([0,0])
+        expect(pizza_split.shares.map(&:paid)).to eq([0, 0])
       end
     end
 
@@ -74,7 +76,7 @@ RSpec.describe Core do
       end
 
       it do
-        expect(pizza_split.shares.map(&:to_pay)).to eq([33.33,33.33,33.33])
+        expect(pizza_split.shares.map(&:to_pay)).to eq([33.33, 33.33, 33.33])
       end
     end
 
@@ -101,13 +103,12 @@ RSpec.describe Core do
     end
   end
 
-  describe "house aggregated expenses" do
+  describe 'house aggregated expenses' do
     let(:house_rental) do
       Core.expense description: 'house monthly fee', amount: 4500
     end
     let(:rent_split) do
-      Core.split(house_rental, %w[henrisch, carioca, johan, jonatas, parah])
+      Core.split(house_rental, %w[henrisch carioca johan jonatas parah])
     end
-
   end
 end

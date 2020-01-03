@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot'
 require './lib/core'
 
@@ -8,22 +10,21 @@ def split
 end
 
 Telegram::Bot::Client.run(token) do |bot|
-
   bot.listen do |message|
     user = message.from.first_name
     case message.text
-    when "/start"
-      puts "started", message
+    when '/start'
+      puts 'started', message
       bot.api.send_message(chat_id: message.chat.id, text: split.inspect)
-    when "/addme"
+    when '/addme'
       split.split_also_with user
       bot.api.send_message(chat_id: message.chat.id, text: split.inspect)
-    when /\/pago\s+\d+/
+    when %r{/pago\s+\d+}
       value = message.text[/(\d+)/].to_i
       split.split_also_with user
       split.add_payment user, value
       bot.api.send_message(chat_id: message.chat.id, text: split.inspect)
-    when "/status"
+    when '/status'
       msg = <<~MSG
         Paid: #{split.paid}
         Missing Value: #{split.missing_value}
