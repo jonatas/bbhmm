@@ -1,9 +1,3 @@
-PATH
-  remote: .
-  specs:
-    bbhmm (0.0.1)
-      telegram-bot-ruby
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -124,8 +118,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bbhmm!
-  bundler
   guard
   guard-livereload
   guard-rspec
@@ -135,6 +127,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rspec
   simplecov
+  telegram-bot-ruby
 
 BUNDLED WITH
    1.17.2
