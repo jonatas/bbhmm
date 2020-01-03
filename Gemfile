@@ -9,10 +9,9 @@ group :development do
   gem 'guard-rspec', '~> 4.7'
   gem 'rspec-core', '~> 3.7'
   gem 'rspec-rails', '~> 3.7'
+  gem 'rubocop', '~> 0.78.0'
+  gem 'rubocop-rspec', '~> 1.37'
 end
 
 gem 'telegram-bot-ruby'
 
-gem 'rubocop', '~> 0.78.0'
-
-gem 'rubocop-rspec', '~> 1.37'
