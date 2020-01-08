@@ -20,7 +20,7 @@ GEM
     eventmachine (1.2.7)
     faraday (1.0.0)
       multipart-post (>= 1.2, < 3)
-    ffi (1.9.23)
+    ffi (1.11.3)
     formatador (0.2.5)
     guard (2.14.2)
       formatador (>= 0.2.4)
